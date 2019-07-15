@@ -13,7 +13,8 @@ import {
   Dialog,
   DialogType,
   DialogFooter,
-  DefaultButton
+  DefaultButton,
+  ProgressIndicator
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 
@@ -131,7 +132,13 @@ class App extends Component {
   }
 
   _renderProgress() {
-    return "[Progress goes here]";
+    return (
+      <ProgressIndicator
+        label="Your progress"
+        description={`${this._TaskManager.getCompletedtaskCount()} of ${this._TaskManager.getTaskCount()} tasks completed`}
+        percentComplete={this._TaskManager.getTaskPercentComplete()}
+      />
+    );
   }
 
   _renderPivot() {
