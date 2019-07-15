@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { Fabric, TextField } from "office-ui-fabric-react";
+import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import "./App.css";
+
+initializeIcons();
+
+class App extends Component {
+  render() {
+    return (
+      <Fabric className="App">
+        <div className="App-header">
+          <span className="App-title">Team Tasks</span>
+          <div className="App-description">
+            <TextField borderless placeholder="Describe your list" />
+          </div>
+        </div>
+      </Fabric>
+    );
+  }
 }
 
 export default App;
