@@ -19,6 +19,7 @@ import {
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 
 import TripManager from "./TripManager";
+import DisplayTrip from "./DisplayTrip";
 import "./App.css";
 
 initializeIcons();
@@ -38,7 +39,8 @@ class App extends Component {
     locationValue: "",
     dateValue: "",
     hideDeleteDialog: true,
-    taskToDelete: null
+    tripToDisplay: null,
+    tripToDelete: null
   };
   render() {
     return (
@@ -56,8 +58,17 @@ class App extends Component {
         <div className="App-main">{this._renderTripList()}</div>
         <div className="App-footer">{this._renderProgress()}</div>
         {this._renderDeleteDialog()}
+        <DisplayTrip
+          trips={this.state.trips}
+          tripId={this.state.tripToDisplay}
+          examplePerson={this.examplePerson}
+        />
       </Fabric>
     );
+  }
+
+  componentDidMount() {
+    console.log(this.state.trips);
   }
 
   _renderCreateTrip() {
@@ -150,6 +161,16 @@ class App extends Component {
                   <Persona {...personArgs} />
                 </div>
               </div>
+              <IconButton
+                className="App-displayTrip"
+                iconProps={{ iconName: "Go" }}
+                title="Display trip"
+                ariaLabel="Delete trip"
+                onClick={event => {
+                  event.stopPropagation();
+                  this._displayTrip(trip.id);
+                }}
+              />
               <IconButton
                 className="App-deleteTrip"
                 iconProps={{ iconName: "Delete" }}
@@ -258,6 +279,12 @@ class App extends Component {
 
     this.setState({
       trips: this._TripManager.getTrips()
+    });
+  }
+
+  _displayTrip(tripId) {
+    this.setState({
+      tripToDisplay: tripId
     });
   }
 
