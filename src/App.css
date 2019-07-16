@@ -48,47 +48,47 @@
   padding: 0 20px;
 }
 
-.App-createTask {
+.App-createTrip {
   display: flex;
   flex-shrink: 0;
   margin: 0 28px 10px;
 }
 
-.App-createTask-field {
+.App-createTrip-field {
   margin: 0 10px 0 0;
   flex-grow: 1;
 }
-[dir="rtl"] .App-createTask-field {
+[dir="rtl"] .App-createTrip-field {
   margin: 0 0 0 10px;
 }
 
-.App-createTask-button {
+.App-createTrip-button {
   flex-shrink: 0;
 }
 
-.App-taskList {
+.App-tripList {
   overflow: auto;
   flex-grow: 1;
 }
-.App-taskList .ms-Checkbox {
+.App-tripList .ms-Checkbox {
   margin-bottom: 14px;
 }
 
-.App-task {
+.App-trip {
   border: 1px solid #edebe9;
   border-bottom: 0;
   padding: 20px;
   transition: box-shadow 0.1ms ease;
   position: relative;
 }
-.App-task:last-child {
+.App-trip:last-child {
   border-bottom: 1px solid #edebe9;
 }
-.App-task:hover {
+.App-trip:hover {
   cursor: pointer;
   background-color: #faf9f8;
 }
-.App-task:hover .App-deleteTask {
+.App-trip:hover .App-deleteTrip {
   opacity: 1;
 }
 
@@ -97,7 +97,7 @@
   padding-bottom: 2px;
 }
 
-.App-deleteTask {
+.App-deleteTrip {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

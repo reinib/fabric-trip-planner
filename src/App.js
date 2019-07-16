@@ -18,7 +18,7 @@ import {
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 
-import TaskManager from "./TaskManager";
+import TripManager from "./TripManager";
 import "./App.css";
 
 initializeIcons();
@@ -30,11 +30,13 @@ const examplePersona = {
 };
 
 class App extends Component {
-  _TaskManager = new TaskManager();
+  _TripManager = new TripManager();
 
   state = {
-    tasks: this._TaskManager._tasks,
-    inputValue: "",
+    trips: this._TripManager._trips,
+    nameValue: "",
+    locationValue: "",
+    dateValue: "",
     hideDeleteDialog: true,
     taskToDelete: null
   };
@@ -43,85 +45,119 @@ class App extends Component {
       <Fabric className="App">
         <div className="App-header">
           <div className="App-titleBlock">
-            <span className="App-title">Team Tasks</span>
+            <span className="App-title">Your Trips</span>
             <div className="App-description">
               <TextField borderless placeholder="Describe your list" />
             </div>
           </div>
-          {this._renderCreateTask()}
+          {this._renderCreateTrip()}
           {this._renderPivot()}
         </div>
-        <div className="App-main">{this._renderTaskList()}</div>
+        <div className="App-main">{this._renderTripList()}</div>
         <div className="App-footer">{this._renderProgress()}</div>
         {this._renderDeleteDialog()}
       </Fabric>
     );
   }
 
-  _renderCreateTask() {
+  _renderCreateTrip() {
     return (
-      <div className="App-createTask">
+      <div className="App-createTrip">
         <TextField
-          className="App-createTask-field"
+          className="App-createTrip-field"
           onChange={event =>
             this.setState({
-              inputValue: event.target.value
+              nameValue: event.target.value
             })
           }
           onKeyDown={event => {
             if (event.key === "Enter") {
-              this._addTask();
+              this._addTrip();
             }
           }}
-          placeholder="Add a new task"
-          value={this.state.inputValue}
+          placeholder="Trip Name"
+          value={this.state.nameValue}
+        />
+        <TextField
+          className="App-createTrip-field"
+          onChange={event =>
+            this.setState({
+              locationValue: event.target.value
+            })
+          }
+          onKeyDown={event => {
+            if (event.key === "Enter") {
+              this._addTrip();
+            }
+          }}
+          placeholder="Location"
+          value={this.state.locationValue}
+        />
+        <TextField
+          type="date"
+          className="App-createTrip-field"
+          onChange={event =>
+            this.setState({
+              dateValue: event.target.value
+            })
+          }
+          onKeyDown={event => {
+            if (event.key === "Enter") {
+              this._addTrip();
+            }
+          }}
+          value={this.state.dateValue}
         />
         <PrimaryButton
-          className="App-createTask-button"
-          onClick={() => this._addTask()}
+          className="App-createTrip-button"
+          onClick={() => this._addTrip()}
         >
-          Add Task
+          Add Trip
         </PrimaryButton>
       </div>
     );
   }
 
-  _renderTaskList() {
+  _renderTripList() {
     return (
-      <div className="App-taskList">
-        {this.state.tasks.map(task => {
-          let { personaProps } = task;
+      <div className="App-tripList">
+        {this.state.trips.map(trip => {
+          let { personaProps } = trip;
           let personArgs = { ...personaProps, ...examplePersona };
 
           return (
             <div
-              className="App-task"
-              key={task.id}
+              className="App-trip"
+              key={trip.id}
               onClick={() => {
-                this._toggleTaskCompleted(task.id);
+                this._toggleTripCompleted(trip.id);
               }}
             >
               <Checkbox
-                checked={task.completed}
-                label={task.title}
-                name={task.id}
+                checked={trip.completed}
+                label={trip.name}
+                name={trip.id}
                 onChange={(event, checked) => {
-                  this._toggleTaskCompleted(task.id);
+                  this._toggleTripCompleted(trip.id);
                 }}
               />
               <div className="App-persona">
+                <div>
+                  <p>Location: {trip.location}</p>
+                  <p>Date: {trip.date}</p>
+                </div>
                 <div className="ms-PersonaExample">
                   <Persona {...personArgs} />
                 </div>
               </div>
               <IconButton
-                className="App-deleteTask"
+                className="App-deleteTrip"
                 iconProps={{ iconName: "Delete" }}
-                title="Delete task"
-                ariaLabel="Delete task"
+                title="Delete trip"
+                ariaLabel="Delete trip"
                 onClick={event => {
                   event.stopPropagation();
-                  this._confirmDeleteTask(task.id);
+                  this._confirmDeleteTrip(trip.id);
                 }}
               />
             </div>
@@ -135,8 +171,8 @@ class App extends Component {
     return (
       <ProgressIndicator
         label="Your progress"
-        description={`${this._TaskManager.getCompletedtaskCount()} of ${this._TaskManager.getTaskCount()} tasks completed`}
-        percentComplete={this._TaskManager.getTaskPercentComplete()}
+        description={`${this._TripManager.getCompletedtripCount()} of ${this._TripManager.getTripCount()} trips completed`}
+        percentComplete={this._TripManager.getTripPercentComplete()}
       />
     );
   }
@@ -146,7 +182,7 @@ class App extends Component {
       <div className="App-pivot">
         <Pivot>
           <PivotItem
-            headerText="All Tasks"
+            headerText="All Trips"
             headerButtonProps={{
               "data-order": 1,
               "data-title": "My Files Title"
@@ -165,9 +201,9 @@ class App extends Component {
         onDismiss={this._closeDeleteDialog}
         dialogContentProps={{
           type: DialogType.normal,
-          title: "Delete task",
+          title: "Delete trip",
           subText:
-            "Are you sure you want to delete this task? This cannot be undone."
+            "Are you sure you want to delete this trip? This cannot be undone."
         }}
         modalProps={{
           isBlocking: false
@@ -176,7 +212,7 @@ class App extends Component {
         <DialogFooter>
           <PrimaryButton
             onClick={() => {
-              this._handleConfirmDeleteClick(this.state.taskToDelete);
+              this._handleConfirmDeleteClick(this.state.tripToDelete);
             }}
             text="Ok"
           />
@@ -189,41 +225,47 @@ class App extends Component {
     );
   }
 
-  _addTask() {
-    this._TaskManager.addTask(this.state.inputValue);
+  _addTrip() {
+    this._TripManager.addTrip(
+      this.state.nameValue,
+      this.state.locationValue,
+      this.state.dateValue
+    );
 
     this.setState({
-      tasks: this._TaskManager.getTasks(),
-      inputValue: ""
+      trips: this._TripManager.getTrips(),
+      nameValue: "",
+      locationValue: "",
+      dateValue: ""
     });
   }
 
-  componentDidMount() {
-    console.log("Mounting**************");
-    console.log(this.state.tasks);
-    console.log("InputValue: " + this.state.inputValue);
-    console.log(this.state.textFieldValue);
-  }
+  // componentDidMount() {
+  //   console.log("Mounting**************");
+  //   console.log(this.state.tasks);
+  //   console.log("InputValue: " + this.state.inputValue);
+  //   console.log(this.state.textFieldValue);
+  // }
 
-  componentDidUpdate() {
-    console.log("Updating**************");
-    console.log(this.state.tasks);
-    console.log("InputValue: " + this.state.inputValue);
-  }
+  // componentDidUpdate() {
+  //   console.log("Updating**************");
+  //   console.log(this.state.tasks);
+  //   console.log("InputValue: " + this.state.inputValue);
+  // }
 
-  _toggleTaskCompleted(taskId) {
-    this._TaskManager.toggleTaskCompleted(taskId);
+  _toggleTripCompleted(tripId) {
+    this._TripManager.toggleTripCompleted(tripId);
 
     this.setState({
-      tasks: this._TaskManager.getTasks()
+      trips: this._TripManager.getTrips()
     });
   }
 
-  _confirmDeleteTask(taskId) {
+  _confirmDeleteTrip(tripId) {
     this._showDeleteDialog();
 
     this.setState({
-      taskToDelete: taskId
+      tripToDelete: tripId
     });
   }
 
@@ -235,12 +277,12 @@ class App extends Component {
     this.setState({ hideDeleteDialog: true });
   };
 
-  _handleConfirmDeleteClick(taskId) {
-    this._TaskManager.deleteTask(taskId);
+  _handleConfirmDeleteClick(tripId) {
+    this._TripManager.deleteTrip(tripId);
 
     this.setState({
-      taskToDelete: null,
-      tasks: this._TaskManager.getTasks()
+      tripToDelete: null,
+      trips: this._TripManager.getTrips()
     });
 
     this._closeDeleteDialog();

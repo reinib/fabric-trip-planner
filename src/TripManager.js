@@ -12,12 +12,14 @@ yesterday.setDate(yesterday.getDate() - 1);
 
 const yesterdaysDate = yesterday.toLocaleDateString("en-us".dateOptions);
 
-export default class TaskManager {
+export default class TripManager {
   constructor() {
-    this._tasks = [
+    this._trips = [
       {
         id: 1,
-        title: "Wash the car",
+        name: "Run with the bulls",
+        location: "Spain",
+        date: yesterdaysDate,
         completed: true,
         personaProps: {
           text: "Carol Poland",
@@ -29,7 +31,9 @@ export default class TaskManager {
       },
       {
         id: 2,
-        title: "Get groceries",
+        name: "Food trip",
+        location: "Italy",
+        date: yesterdaysDate,
         completed: true,
         personaProps: {
           text: "Amanda Brady",
@@ -41,7 +45,9 @@ export default class TaskManager {
       },
       {
         id: 3,
-        title: "Walk the dog",
+        name: "Winter Snowboarding",
+        location: "Japan",
+        date: yesterdaysDate,
         completed: false,
         personaProps: {
           text: "Miguel Garcia",
@@ -54,30 +60,34 @@ export default class TaskManager {
     ];
   }
 
-  getTasks() {
-    return this._tasks;
+  getTrips() {
+    return this._trips;
   }
 
-  getCompletedtaskCount() {
-    return this._tasks.filter(task => task.completed).length;
+  getCompletedtripCount() {
+    return this._trips.filter(trip => trip.completed).length;
   }
 
-  getTaskCount() {
-    return this._tasks.length;
+  getTripCount() {
+    return this._trips.length;
   }
 
-  getTaskPercentComplete() {
-    return this.getCompletedtaskCount() / this.getTaskCount();
+  getTripPercentComplete() {
+    return this.getCompletedtripCount() / this.getTripCount();
   }
 
-  addTask(title) {
+  addTrip(name, location, date) {
     let today = new Date();
     let todaysDate = today.toLocaleString("en-us", dateOptions);
 
-    if (title) {
-      const newTask = {
-        id: this._tasks.length + 1,
-        title: title,
+    let tripDate = new Date(date).toLocaleString("en-us", dateOptions);
+
+    if ((name, location, tripDate)) {
+      const newTrip = {
+        id: this._trips.length + 1,
+        name: name,
+        location: location,
+        date: tripDate,
         completed: false,
         personaProps: {
           text: "Brent Reininger",
@@ -85,32 +95,32 @@ export default class TaskManager {
           initialsColor: PersonaInitialsColor.blue
         }
       };
-      this._tasks = this._tasks.concat(newTask);
+      this._trips = this._trips.concat(newTrip);
     }
   }
 
-  toggleTaskCompleted(taskId) {
-    const updatedTasks = this._tasks;
+  toggleTripCompleted(tripId) {
+    const updatedTrips = this._trips;
 
-    updatedTasks.forEach((task, index) => {
-      let { id, completed } = task;
+    updatedTrips.forEach((trip, index) => {
+      let { id, completed } = trip;
 
-      if (id === taskId) {
-        updatedTasks[index].completed = !completed;
+      if (id === tripId) {
+        updatedTrips[index].completed = !completed;
       }
     });
-    this._tasks = updatedTasks;
+    this._trips = updatedTrips;
   }
 
-  deleteTask(taskId) {
-    let updatedTasks = this._tasks.slice();
+  deleteTrip(tripId) {
+    let updatedTrips = this._trips.slice();
 
-    updatedTasks.forEach((task, index) => {
-      let { id } = task;
-      if (id === taskId) {
-        updatedTasks.splice(index, 1);
+    updatedTrips.forEach((trip, index) => {
+      let { id } = trip;
+      if (id === tripId) {
+        updatedTrips.splice(index, 1);
       }
     });
-    this._tasks = updatedTasks;
+    this._trips = updatedTrips;
   }
 }
