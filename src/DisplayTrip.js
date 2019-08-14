@@ -2,8 +2,6 @@ import React from "react";
 import "./App.css"
 
 const displayTrip = props => {
-  console.log("Display Trip props-tripId: " + props.tripId);
-  console.log(props.trips);
 
   const trips = props.trips;
 

@@ -57,15 +57,27 @@ class App extends Component {
             </div>
           </div>
           {this._renderCreateTrip()}
-          {this._renderPivot()}
+          {/* {this._renderPivot()} */}
         </div>
-        <div className="App-main">{this._renderTripList()}</div>
+        <Pivot className="App-pivot">
+          <PivotItem
+            headerText="All Trips"
+            headerButtonProps={{
+              "data-order": 1,
+              "data-title": "My Files Title"
+            }}
+          >
+            <div className="App-main">{this._renderTripList()}</div>
+          </PivotItem>
+          <PivotItem headerText="Completed" >
+            <div className="App-main">{this._renderCompletedTripList()}</div>
+          </PivotItem>
+        </Pivot>
         <div className="App-footer">{this._renderProgress()}</div>
         {this._renderDeleteDialog()}
         <DisplayTrip
           trips={this.state.trips}
           tripId={this.state.tripToDisplay}
-          examplePerson={this.examplePerson}
         />
       </Fabric>
     );
@@ -248,6 +260,59 @@ class App extends Component {
     );
   }
 
+  _renderCompletedTripList() {
+    return (
+      <div className="App-tripList">
+        {this.state.trips.map(trip => {
+          if (trip.completed === true) {
+            let { personaProps } = trip;
+            let personArgs = { ...personaProps, ...examplePersona };
+  
+            return (
+              <div
+                className="App-trip"
+                key={trip.id}
+                onClick={() => {
+                  this._toggleTripCompleted(trip.id);
+                }}
+              >
+                <div className="App-persona">
+                  <div>
+                    <p>Location: {trip.location}</p>
+                    <p>Date: {trip.date}</p>
+                  </div>
+                  <div className="ms-PersonaExample">
+                    <Persona {...personArgs} />
+                  </div>
+                </div>
+                <IconButton
+                  className="App-displayTrip"
+                  iconProps={{ iconName: "Go" }}
+                  title="Display trip"
+                  ariaLabel="Delete trip"
+                  onClick={event => {
+                    event.stopPropagation();
+                    this._displayTrip(trip.id);
+                  }}
+                />
+                <IconButton
+                  className="App-deleteTrip"
+                  iconProps={{ iconName: "Delete" }}
+                  title="Delete trip"
+                  ariaLabel="Delete trip"
+                  onClick={event => {
+                    event.stopPropagation();
+                    this._confirmDeleteTrip(trip.id);
+                  }}
+                />
+              </div>
+            );
+          }
+        })}
+      </div>
+    )
+  }
+
   _renderProgress() {
     return (
       <ProgressIndicator
@@ -255,23 +320,6 @@ class App extends Component {
         description={`${this._TripManager.getCompletedtripCount()} of ${this._TripManager.getTripCount()} trips completed`}
         percentComplete={this._TripManager.getTripPercentComplete()}
       />
-    );
-  }
-
-  _renderPivot() {
-    return (
-      <div className="App-pivot">
-        <Pivot>
-          <PivotItem
-            headerText="All Trips"
-            headerButtonProps={{
-              "data-order": 1,
-              "data-title": "My Files Title"
-            }}
-          />
-          <PivotItem linkText="Completed" />
-        </Pivot>
-      </div>
     );
   }
 
