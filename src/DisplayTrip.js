@@ -1,19 +1,26 @@
 import React from "react";
+import "./App.css"
 
 const displayTrip = props => {
-  console.log("props-tripId: " + props.tripId);
+  console.log("Display Trip props-tripId: " + props.tripId);
   console.log(props.trips);
 
   const trips = props.trips;
 
   return props.tripId ? (
-    trips.filter(trip => {
-      if (trip.id === props.tripId) {
-        console.log(trip.name);
+    <div className="App-trip">{trips.map(trip => {
+      if(trip.id === props.tripId) {
+        return (
+          <div>
+            <strong>{trip.name} </strong>
+            <br/>
+            {trip.description}
+          </div>
+        )
       }
-    })
+    })}</div>
   ) : (
-    <div>Hello World</div>
+    <div></div>
   );
 };
 

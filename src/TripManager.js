@@ -21,6 +21,7 @@ export default class TripManager {
         location: "Spain",
         date: yesterdaysDate,
         completed: true,
+        description: "Lorem ipsum dolor sit amet, vel vidisse partiendo no. Esse maluisset sit et, et his wisi omnesque. Sint equidem antiopam in vis, ullum quidam ei cum. Unum dicit recusabo ne cum, laboramus scripserit sed id..",
         personaProps: {
           text: "Carol Poland",
           secondaryText: `Created ${yesterdaysDate}`,
@@ -35,6 +36,7 @@ export default class TripManager {
         location: "Italy",
         date: yesterdaysDate,
         completed: true,
+        description: "Lorem ipsum dolor sit amet, vel vidisse partiendo no. Esse maluisset sit et, et his wisi omnesque. Sint equidem antiopam in vis, ullum quidam ei cum. Unum dicit recusabo ne cum, laboramus scripserit sed id..",
         personaProps: {
           text: "Amanda Brady",
           secondaryText: `Created ${yesterdaysDate}`,
@@ -49,6 +51,7 @@ export default class TripManager {
         location: "Japan",
         date: yesterdaysDate,
         completed: false,
+        description: "Lorem ipsum dolor sit amet, vel vidisse partiendo no. Esse maluisset sit et, et his wisi omnesque. Sint equidem antiopam in vis, ullum quidam ei cum. Unum dicit recusabo ne cum, laboramus scripserit sed id..",
         personaProps: {
           text: "Miguel Garcia",
           secondaryText: `Created ${yesterdaysDate}`,
@@ -76,19 +79,20 @@ export default class TripManager {
     return this.getCompletedtripCount() / this.getTripCount();
   }
 
-  addTrip(name, location, date) {
+  addTrip(name, location, date, description) {
     let today = new Date();
     let todaysDate = today.toLocaleString("en-us", dateOptions);
 
     let tripDate = new Date(date).toLocaleString("en-us", dateOptions);
 
-    if ((name, location, tripDate)) {
+    if ((name, location, tripDate, description)) {
       const newTrip = {
         id: this._trips.length + 1,
         name: name,
         location: location,
         date: tripDate,
         completed: false,
+        description: description,
         personaProps: {
           text: "Brent Reininger",
           secondaryText: `Created ${todaysDate}`,

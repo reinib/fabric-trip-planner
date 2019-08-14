@@ -14,7 +14,8 @@ import {
   DialogType,
   DialogFooter,
   DefaultButton,
-  ProgressIndicator
+  ProgressIndicator,
+  Stack
 } from "office-ui-fabric-react";
 import { initializeIcons } from "office-ui-fabric-react/lib/Icons";
 
@@ -34,10 +35,13 @@ class App extends Component {
   _TripManager = new TripManager();
 
   state = {
+    tripTitle: "Your Trips",
+    tripTitleValue: "",
     trips: this._TripManager._trips,
     nameValue: "",
     locationValue: "",
     dateValue: "",
+    descriptionValue: "",
     hideDeleteDialog: true,
     tripToDisplay: null,
     tripToDelete: null
@@ -47,9 +51,9 @@ class App extends Component {
       <Fabric className="App">
         <div className="App-header">
           <div className="App-titleBlock">
-            <span className="App-title">Your Trips</span>
+            <span className="App-title">{this.state.tripTitle}</span>
             <div className="App-description">
-              <TextField borderless placeholder="Describe your list" />
+             <div>{this._changeAppTitle()}</div> 
             </div>
           </div>
           {this._renderCreateTrip()}
@@ -71,60 +75,116 @@ class App extends Component {
     console.log(this.state.trips);
   }
 
+  _changeAppTitle(){
+    return (
+      <TextField borderless 
+        onChange={(event) => 
+          this.setState({
+            tripTitleValue: event.target.value
+          })
+
+         
+        }
+        onKeyDown={event => {
+          if (event.key === "Enter") {
+            this._addTripTitle();
+            console.log("Trip value: " + this.state.tripTitleValue)
+          }
+        }}
+        placeholder="Describe your list" 
+        value={this.state.tripTitleValue}
+
+      />
+    )
+  }
+
+  _addTripTitle() {
+    const title = this.state.tripTitleValue
+
+    this.setState({
+      tripTitle: title,
+      tripTitleValue: ""
+    });
+  }
+
   _renderCreateTrip() {
     return (
       <div className="App-createTrip">
-        <TextField
-          className="App-createTrip-field"
-          onChange={event =>
-            this.setState({
-              nameValue: event.target.value
-            })
-          }
-          onKeyDown={event => {
-            if (event.key === "Enter") {
-              this._addTrip();
+        <Stack>
+          <TextField
+            className="App-createTrip-field"
+            onChange={event =>
+              this.setState({
+                nameValue: event.target.value
+              })
             }
-          }}
-          placeholder="Trip Name"
-          value={this.state.nameValue}
-        />
-        <TextField
-          className="App-createTrip-field"
-          onChange={event =>
-            this.setState({
-              locationValue: event.target.value
-            })
-          }
-          onKeyDown={event => {
-            if (event.key === "Enter") {
-              this._addTrip();
+            onKeyDown={event => {
+              if (event.key === "Enter") {
+                this._addTrip();
+              }
+            }}
+            placeholder="Trip Name"
+            value={this.state.nameValue}
+          />
+          <TextField
+            className="App-createTrip-field"
+            onChange={event =>
+              this.setState({
+                locationValue: event.target.value
+              })
             }
-          }}
-          placeholder="Location"
-          value={this.state.locationValue}
-        />
-        <TextField
-          type="date"
-          className="App-createTrip-field"
-          onChange={event =>
-            this.setState({
-              dateValue: event.target.value
-            })
-          }
-          onKeyDown={event => {
-            if (event.key === "Enter") {
-              this._addTrip();
+            onKeyDown={event => {
+              if (event.key === "Enter") {
+                this._addTrip();
+              }
+            }}
+            placeholder="Location"
+            value={this.state.locationValue}
+          />
+          <TextField
+            type="date"
+            className="App-createTrip-field"
+            onChange={event =>
+              this.setState({
+                dateValue: event.target.value
+              })
             }
-          }}
-          value={this.state.dateValue}
-        />
-        <PrimaryButton
-          className="App-createTrip-button"
-          onClick={() => this._addTrip()}
-        >
-          Add Trip
-        </PrimaryButton>
+            onKeyDown={event => {
+              if (event.key === "Enter") {
+                this._addTrip();
+              }
+            }}
+            value={this.state.dateValue}
+          />
+        </Stack>
+        <Stack>
+          <TextField
+            multiline rows={6}
+            type="text"
+            className="App-createTrip-field "
+            onChange={event =>
+              this.setState({
+                descriptionValue: event.target.value
+              })
+            }
+            onKeyDown={event => {
+              if (event.key === "Enter") {
+                this._addTrip();
+              }
+            }}
+            placeholder="Description"
+            value={this.state.descriptionValue}
+          />
+          </Stack>
+          <Stack>
+          <PrimaryButton
+            className="App-createTrip-button"
+            onClick={() => this._addTrip()}
+          >
+            Add Trip
+          </PrimaryButton>
+        </Stack>
+ 
       </div>
     );
   }
@@ -250,14 +310,16 @@ class App extends Component {
     this._TripManager.addTrip(
       this.state.nameValue,
       this.state.locationValue,
-      this.state.dateValue
+      this.state.dateValue,
+      this.state.descriptionValue
     );
 
     this.setState({
       trips: this._TripManager.getTrips(),
       nameValue: "",
       locationValue: "",
-      dateValue: ""
+      dateValue: "",
+      descriptionValue: ""
     });
   }
 
